@@ -87,11 +87,16 @@ class Boblights:
         self.socket = None
 
     def set_light(self, light, color='FFFFFF'):
-        """Set a light to a color. This is the function you are looking for."""
+        """Set a light to a color. This is the function you are looking for.
+        
+        color can either be an hex string or a touple of three floats between 0 and 1"""
         if light not in self.lights:
             raise ValueError("Light %s is not registered" % light)
         
-        rgb_decimal = str(float(int(color[0:2], 16))/255)+' '+str(float(int(color[2:4], 16))/255)+' '+str(float(int(color[4:6], 16))/255)
+        if isinstance(color, tuple):
+            rgb_decimal = " ".join(color)
+        else:
+            rgb_decimal = str(float(int(color[0:2], 16))/255)+' '+str(float(int(color[2:4], 16))/255)+' '+str(float(int(color[4:6], 16))/255)
 
         self.socket.send(("set light %s rgb %s\n" % (light, rgb_decimal)).encode())
         self.socket.send(b"sync\n")
